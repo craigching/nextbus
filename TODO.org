@@ -9,3 +9,4 @@
 8. [X] Need to implement GetTimepointDepartures
 9. [X] Need to implement "how long before next bus?"
 10. [ ] Need to pretty print the duration
+11. [ ] Capture text messages (error or otherwise) in a Messages class
