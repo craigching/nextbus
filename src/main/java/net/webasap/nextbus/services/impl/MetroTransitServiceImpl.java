@@ -2,7 +2,9 @@ package net.webasap.nextbus.services.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
 import net.webasap.nextbus.domain.Departure;
 import net.webasap.nextbus.domain.Direction;
 import net.webasap.nextbus.domain.Route;
@@ -11,13 +13,13 @@ import net.webasap.nextbus.services.HttpClient;
 
 import javax.inject.Inject;
 import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 
 public class MetroTransitServiceImpl implements net.webasap.nextbus.services.MetroTransitService {
 
     final private HttpClient client;
-    final private ObjectMapper mapper = new ObjectMapper();
+    final private ObjectMapper mapper = new ObjectMapper()
+            .registerModule(new GuavaModule());
 
     @Inject
     public MetroTransitServiceImpl(HttpClient client) {
@@ -25,10 +27,10 @@ public class MetroTransitServiceImpl implements net.webasap.nextbus.services.Met
     }
 
     @Override
-    public Optional<List<Route>> getRoutes() {
+    public Optional<ImmutableList<Route>> getRoutes() {
 
         try {
-            return get(Urls.getRoutes(), new TypeReference<List<Route>>() {});
+            return get(Urls.getRoutes(), new TypeReference<ImmutableList<Route>>() {});
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -37,13 +39,13 @@ public class MetroTransitServiceImpl implements net.webasap.nextbus.services.Met
     }
 
     @Override
-    public Optional<List<Direction>> getValidDirections(Route route) {
+    public Optional<ImmutableList<Direction>> getValidDirections(Route route) {
 
         Preconditions.checkNotNull(route);
         Preconditions.checkNotNull(route.getRoute());
 
         try {
-            return get(Urls.getDirections(route), new TypeReference<List<Direction>>() {});
+            return get(Urls.getDirections(route), new TypeReference<ImmutableList<Direction>>() {});
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -52,14 +54,14 @@ public class MetroTransitServiceImpl implements net.webasap.nextbus.services.Met
     }
 
     @Override
-    public Optional<List<Stop>> getStops(Route route, Direction direction) {
+    public Optional<ImmutableList<Stop>> getStops(Route route, Direction direction) {
 
         Preconditions.checkNotNull(route);
         Preconditions.checkNotNull(route.getRoute());
         Preconditions.checkNotNull(direction);
 
         try {
-            return get(Urls.getStops(route, direction), new TypeReference<List<Stop>>() {});
+            return get(Urls.getStops(route, direction), new TypeReference<ImmutableList<Stop>>() {});
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -68,7 +70,7 @@ public class MetroTransitServiceImpl implements net.webasap.nextbus.services.Met
     }
 
     @Override
-    public Optional<List<Departure>> getDepartures(Route route, Direction direction, Stop stop) {
+    public Optional<ImmutableList<Departure>> getDepartures(Route route, Direction direction, Stop stop) {
 
         Preconditions.checkNotNull(route);
         Preconditions.checkNotNull(direction);
@@ -79,7 +81,7 @@ public class MetroTransitServiceImpl implements net.webasap.nextbus.services.Met
         Preconditions.checkArgument(direction != Direction.unknown);
 
         try {
-            return get(Urls.getDepartures(route, direction, stop), new TypeReference<List<Departure>>() {});
+            return get(Urls.getDepartures(route, direction, stop), new TypeReference<ImmutableList<Departure>>() {});
         } catch (IOException e) {
             e.printStackTrace();
         }

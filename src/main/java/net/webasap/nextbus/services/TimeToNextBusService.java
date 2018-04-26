@@ -1,5 +1,6 @@
 package net.webasap.nextbus.services;
 
+import com.google.common.collect.ImmutableList;
 import lombok.val;
 import net.webasap.nextbus.domain.Departure;
 import net.webasap.nextbus.domain.Direction;
@@ -31,7 +32,7 @@ public class TimeToNextBusService {
 
         val matches = routes.stream()
                 .filter(route -> route.getDescription().contains(text))
-                .collect(Collectors.toList());
+                .collect(ImmutableList.toImmutableList());
 
         if (matches.size() == 0) {
             throw new BusServiceException("No matches were found for the given route.");
@@ -59,7 +60,7 @@ public class TimeToNextBusService {
 
         val foundStops = stops.stream()
                 .filter(stop -> stop.getText().contains(stopText))
-                .collect(Collectors.toList());
+                .collect(ImmutableList.toImmutableList());
 
         if (foundStops.size() == 0) {
             throw new BusServiceException("No stop was found for the given stop, route, and direction.");
