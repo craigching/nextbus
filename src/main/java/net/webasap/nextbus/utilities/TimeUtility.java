@@ -2,6 +2,7 @@ package net.webasap.nextbus.utilities;
 
 import lombok.val;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -27,5 +28,37 @@ public class TimeUtility {
         val inst = Instant.ofEpochMilli(millis);
 
         return ZonedDateTime.ofInstant(inst, ZoneId.of(tz));
+    }
+
+    public static String convertDuration(Duration duration) {
+        long millis = duration.toMillis();
+        val hours = millis / 3_600_000;
+        millis -= hours * 3_600_000;
+        val minutes = millis / 60_000;
+        millis -= minutes * 60_000;
+        val seconds = millis / 1000;
+
+        val bldr = new StringBuilder();
+
+        if (hours > 0) {
+            bldr.append(hours).append(" hour");
+            if (hours > 1) {
+                bldr.append("s ");
+            }
+        } else {
+            if (minutes > 0) {
+                bldr.append(minutes).append(" minute");
+                if (minutes > 1) {
+                    bldr.append("s ");
+                }
+            } else {
+                bldr.append(seconds).append(" second");
+                if (seconds > 1) {
+                    bldr.append("s");
+                }
+            }
+        }
+
+        return bldr.toString().trim();
     }
 }

@@ -19,7 +19,8 @@ public class Main {
         val injector = Guice.createInjector(new BusServiceModule());
         val nextBusService = injector.getInstance(TimeToNextBusService.class);
 
-        nextBusService.getTimeToNextBus("METRO Blue Line", "Target Field Station Platform 1", "south");
+        System.out.println(nextBusService.getTimeToNextBus("METRO Blue Line", "Target Field Station Platform 1", "south"));
+        System.out.println(nextBusService.getTimeToNextBus("Express - Target - Hwy 252 and 73rd Av P&R - Mpls", "Target North Campus Building F", "south"));
 
     }
 }

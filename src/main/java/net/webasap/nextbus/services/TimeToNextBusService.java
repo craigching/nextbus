@@ -95,6 +95,9 @@ public class TimeToNextBusService {
     }
 
     public String getTimeToNextBus(String route, String stop, String direction) {
+
+        String message = "";
+
         try {
             val foundRoute = findRouteFromText(route);
             val foundDirection = validateDirection(foundRoute, direction);
@@ -104,20 +107,17 @@ public class TimeToNextBusService {
             if (opt.isPresent()) {
                 val departure = opt.get();
                 val departTime = TimeUtility.convertDepartureTime(departure.getDepartureTime());
-                val diff = Duration.between(departTime, ZonedDateTime.now());
+                val diff = Duration.between(ZonedDateTime.now(), departTime);
                 // TODO Pretty print diff
                 // TODO Need to return the string, let the caller decide what to do with it
-                System.out.println(diff);
-            } else {
-                // TODO Need to return the string, let the caller decide what to do with it
-                System.out.println("");
+                message = TimeUtility.convertDuration(diff);
             }
 
         } catch (BusServiceException e) {
-
+            message = e.getMessage();
         }
 
-        return "";
+        return message;
     }
 
     private static class BusServiceException extends Exception {
