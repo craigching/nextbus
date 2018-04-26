@@ -1,8 +1,14 @@
-package net.webasap.nextbus.domain;
+package net.webasap.nextbus.services;
 
 import lombok.val;
-import net.webasap.nextbus.TimeUtility;
+import net.webasap.nextbus.domain.Departure;
+import net.webasap.nextbus.domain.Direction;
+import net.webasap.nextbus.domain.Route;
+import net.webasap.nextbus.domain.Stop;
+import net.webasap.nextbus.utilities.TimeUtility;
+import net.webasap.nextbus.services.MetroTransitService;
 
+import javax.inject.Inject;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.Comparator;
@@ -12,9 +18,16 @@ import java.util.stream.Collectors;
 
 public class TimeToNextBusService {
 
+    final private MetroTransitService metroTransitService;
+
+    @Inject
+    public TimeToNextBusService(MetroTransitService metroTransitService) {
+        this.metroTransitService = metroTransitService;
+    }
+
     public Route findRouteFromText(String text) throws BusServiceException {
 
-        val routes = MetroTransitService.instance().getRoutes().get();
+        val routes = this.metroTransitService.getRoutes().get();
 
         val matches = routes.stream()
                 .filter(route -> route.getDescription().contains(text))
@@ -31,7 +44,7 @@ public class TimeToNextBusService {
 
     public Direction validateDirection(Route route, String direction) throws BusServiceException {
 
-        val validDirections = MetroTransitService.instance().getValidDirections(route).get();
+        val validDirections = this.metroTransitService.getValidDirections(route).get();
 
         if (!validDirections.contains(Direction.of(direction))) {
             throw new BusServiceException("The provided direction is not valid for the given route.");
@@ -42,7 +55,7 @@ public class TimeToNextBusService {
 
     public Stop findStop(Route route, Direction direction, String stopText) throws BusServiceException {
 
-        val stops = MetroTransitService.instance().getStops(route, direction).get();
+        val stops = this.metroTransitService.getStops(route, direction).get();
 
         val foundStops = stops.stream()
                 .filter(stop -> stop.getText().contains(stopText))
@@ -58,7 +71,7 @@ public class TimeToNextBusService {
     }
 
     public Optional<Departure> findNextDeparture(Route route, Direction direction, Stop stop) {
-        val departures = MetroTransitService.instance().getDepartures(route, direction, stop).get();
+        val departures = this.metroTransitService.getDepartures(route, direction, stop).get();
         // TODO departures could be empty
         // TODO do we know the sort order on the list if there is one?
 

@@ -1,0 +1,11 @@
+
+1. [ ] Design main -> MetroTransitService
+2. [ ] Decouple MetroTransitService from Jackson
+3. [ ] Javadoc
+4. [ ] Testing with mocks
+5. [ ] README.md
+6. [ ] Web interface?
+7. [ ] Hosted on AWS?
+8. [X] Need to implement GetTimepointDepartures
+9. [X] Need to implement "how long before next bus?"
+10. [ ] Need to pretty print the duration

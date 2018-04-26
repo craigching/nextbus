@@ -1,28 +1,30 @@
-package net.webasap.nextbus.domain;
+package net.webasap.nextbus.services.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
-import com.sun.org.apache.xml.internal.dtm.ref.sax2dtm.SAX2DTM2;
-import net.webasap.nextbus.HttpClient;
+import net.webasap.nextbus.domain.Departure;
+import net.webasap.nextbus.domain.Direction;
+import net.webasap.nextbus.domain.Route;
+import net.webasap.nextbus.domain.Stop;
+import net.webasap.nextbus.services.HttpClient;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-public class MetroTransitService {
+public class MetroTransitServiceImpl implements net.webasap.nextbus.services.MetroTransitService {
 
-    final private HttpClient client = new HttpClient();
+    final private HttpClient client;
     final private ObjectMapper mapper = new ObjectMapper();
 
-    private static class Singleton {
-        public static MetroTransitService INSTANCE = new MetroTransitService();
+    @Inject
+    public MetroTransitServiceImpl(HttpClient client) {
+        this.client = client;
     }
 
-    public static MetroTransitService instance() {
-        return Singleton.INSTANCE;
-    }
-
+    @Override
     public Optional<List<Route>> getRoutes() {
 
         try {
@@ -34,6 +36,7 @@ public class MetroTransitService {
         return Optional.empty();
     }
 
+    @Override
     public Optional<List<Direction>> getValidDirections(Route route) {
 
         Preconditions.checkNotNull(route);
@@ -48,6 +51,7 @@ public class MetroTransitService {
         return Optional.empty();
     }
 
+    @Override
     public Optional<List<Stop>> getStops(Route route, Direction direction) {
 
         Preconditions.checkNotNull(route);
@@ -63,6 +67,7 @@ public class MetroTransitService {
         return Optional.empty();
     }
 
+    @Override
     public Optional<List<Departure>> getDepartures(Route route, Direction direction, Stop stop) {
 
         Preconditions.checkNotNull(route);
@@ -91,7 +96,7 @@ public class MetroTransitService {
         // TODO Consider a URL type mapping.  Given URLs have a static
         // return type, so coupling the URL with the return type makes
         // a lot of sense and would help decouple the JSON mapping
-        // implementation from the MetroTransitService
+        // implementation from the MetroTransitServiceImpl
 
         final private static String ROUTES_URL = "http://svc.metrotransit.org/NexTrip/Routes";
         // ROUTE

@@ -1,4 +1,4 @@
-package net.webasap.nextbus;
+package net.webasap.nextbus.utilities;
 
 import com.google.common.base.Preconditions;
 import lombok.val;
