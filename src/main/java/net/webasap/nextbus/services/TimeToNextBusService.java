@@ -7,7 +7,6 @@ import net.webasap.nextbus.domain.Direction;
 import net.webasap.nextbus.domain.Route;
 import net.webasap.nextbus.domain.Stop;
 import net.webasap.nextbus.utilities.TimeUtility;
-import net.webasap.nextbus.services.MetroTransitService;
 
 import javax.inject.Inject;
 import java.time.Duration;
