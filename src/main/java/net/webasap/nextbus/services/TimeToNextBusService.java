@@ -120,6 +120,73 @@ public class TimeToNextBusService {
         return message;
     }
 
+    public String listRoutes() {
+        val routes = this.metroTransitService.getRoutes().get();
+        val bldr = new StringBuilder();
+        for (val route : routes) {
+            bldr.append(route.getDescription()).append(System.getProperty("line.separator"));
+        }
+        return bldr.toString();
+    }
+
+    public String listDirections(String routeText) {
+        String message = "";
+        try {
+            val route = findRouteFromText(routeText);
+            val directions = this.metroTransitService.getValidDirections(route).get();
+            val bldr = new StringBuilder();
+            for (val direction : directions) {
+                bldr.append(direction).append(System.getProperty("line.separator"));
+            }
+            message = bldr.toString();
+        } catch (BusServiceException e) {
+            message = e.getMessage();
+        }
+
+        return message;
+    }
+
+    public String listStops(String routeText, String directionText) {
+        String message = "";
+        try {
+            val route = findRouteFromText(routeText);
+            val direction = validateDirection(route, directionText);
+            val stops = this.metroTransitService.getStops(route, direction).get();
+            val bldr = new StringBuilder();
+            for (val stop : stops) {
+                bldr.append(stop.getText()).append(System.getProperty("line.separator"));
+            }
+            message = bldr.toString();
+        } catch (BusServiceException e) {
+            message = e.getMessage();
+        }
+
+        return message;
+
+    }
+
+    public String listDepartures(String routeText, String directionText, String stopText) {
+        String message = "";
+        try {
+            val route = findRouteFromText(routeText);
+            val direction = validateDirection(route, directionText);
+            val stop = findStop(route, direction, stopText);
+            val departures = this.metroTransitService.getDepartures(route, direction, stop).get();
+            val bldr = new StringBuilder();
+            for (val departure : departures) {
+                val departTime = TimeUtility.convertDepartureTime(departure.getDepartureTime());
+                val diff = Duration.between(ZonedDateTime.now(), departTime);
+                val t = TimeUtility.convertDuration(diff);
+                bldr.append(t).append(System.getProperty("line.separator"));
+            }
+            message = bldr.toString();
+        } catch (BusServiceException e) {
+            message = e.getMessage();
+        }
+
+        return message;
+    }
+
     private static class BusServiceException extends Exception {
         public BusServiceException(String message) {
             super(message);
