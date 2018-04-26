@@ -1,8 +1,6 @@
 package net.webasap.nextbus.utilities;
 
 import joptsimple.OptionParser;
-import joptsimple.OptionSet;
-import joptsimple.OptionSpec;
 import lombok.Getter;
 import lombok.val;
 

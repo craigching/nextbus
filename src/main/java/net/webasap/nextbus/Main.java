@@ -2,7 +2,6 @@ package net.webasap.nextbus;
 
 import com.google.inject.Guice;
 import lombok.val;
-import net.webasap.nextbus.domain.Route;
 import net.webasap.nextbus.modules.BusServiceModule;
 import net.webasap.nextbus.services.TimeToNextBusService;
 import net.webasap.nextbus.utilities.BusServiceCommandParser;
