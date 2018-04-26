@@ -3,6 +3,7 @@ package net.webasap.nextbus.domain;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
+import com.sun.org.apache.xml.internal.dtm.ref.sax2dtm.SAX2DTM2;
 import net.webasap.nextbus.HttpClient;
 
 import java.io.IOException;
@@ -62,12 +63,36 @@ public class MetroTransitService {
         return Optional.empty();
     }
 
+    public Optional<List<Departure>> getDepartures(Route route, Direction direction, Stop stop) {
+
+        Preconditions.checkNotNull(route);
+        Preconditions.checkNotNull(direction);
+        Preconditions.checkNotNull(stop);
+
+        Preconditions.checkNotNull(route.getRoute());
+        Preconditions.checkNotNull(stop.getValue());
+        Preconditions.checkArgument(direction != Direction.unknown);
+
+        try {
+            return get(Urls.getDepartures(route, direction, stop), new TypeReference<List<Departure>>() {});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return Optional.empty();
+    }
     private <T> Optional<T> get(String url, TypeReference<T> type) throws IOException {
         String body = client.get(url);
         return Optional.of(mapper.readValue(body, type));
     }
 
     private static class Urls {
+
+        // TODO Consider a URL type mapping.  Given URLs have a static
+        // return type, so coupling the URL with the return type makes
+        // a lot of sense and would help decouple the JSON mapping
+        // implementation from the MetroTransitService
+
         final private static String ROUTES_URL = "http://svc.metrotransit.org/NexTrip/Routes";
         // ROUTE
         final private static String DIRECTIONS_URL_FORMAT = "http://svc.metrotransit.org/NexTrip/Directions/%s";
@@ -89,6 +114,14 @@ public class MetroTransitService {
                     STOPS_URL_FORMAT,
                     route.getRoute(),
                     direction.ordinal());
+        }
+
+        public static String getDepartures(Route route, Direction direction, Stop stop) {
+            return String.format(
+                    TIMEPOINT_DEPARTURES_URL_FORMAT,
+                    route.getRoute(),
+                    direction.ordinal(),
+                    stop.getValue());
         }
     }
 }
