@@ -1,6 +1,7 @@
 package net.webasap.nextbus.core.service.impl;
 
 import lombok.val;
+import net.webasap.nextbus.core.BaseJsonTestSuite;
 import net.webasap.nextbus.core.domain.Direction;
 import net.webasap.nextbus.core.domain.Route;
 import net.webasap.nextbus.core.services.HttpClient;
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 
+import static net.webasap.nextbus.core.JsonLoader.loadJsonFile;
 import static net.webasap.nextbus.core.domain.Direction.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -22,24 +24,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class TestMetroTransitServiceImpl {
-
-    private static String ROUTES_JSON;
-    private static String DIRECTIONS_JSON;
-    private static String STOPS_JSON;
-
-    private static String loadJsonFile(String name) throws IOException {
-        val fileName = String.format("/%s", name);
-        val routesFile = new File(TestMetroTransitServiceImpl.class.getResource(fileName).getFile());
-        return FileUtils.readFileToString(routesFile, Charset.forName("UTF-8"));
-    }
-
-    @BeforeClass
-    public static void setup() throws IOException {
-        ROUTES_JSON = loadJsonFile("routes.json");
-        DIRECTIONS_JSON = loadJsonFile("directions.json");
-        STOPS_JSON = loadJsonFile("stops.json");
-    }
+public class TestMetroTransitServiceImpl extends BaseJsonTestSuite {
 
     @Test
     public void testGetRoutes() {
