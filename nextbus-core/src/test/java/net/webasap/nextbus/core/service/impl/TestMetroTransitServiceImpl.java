@@ -27,7 +27,7 @@ import static org.mockito.Mockito.when;
 public class TestMetroTransitServiceImpl extends BaseJsonTestSuite {
 
     @Test
-    public void testGetRoutes() {
+    public void testGetRoutes() throws IOException {
 
         val colors = Arrays.asList("Blue", "Green", "Red");
 
@@ -45,7 +45,7 @@ public class TestMetroTransitServiceImpl extends BaseJsonTestSuite {
     }
 
     @Test
-    public void testGetDirections() {
+    public void testGetDirections() throws IOException {
 
         val routeName = "MyTestRoute";
         val url = String.format("http://svc.metrotransit.org/NexTrip/Directions/%s", routeName);
@@ -65,7 +65,7 @@ public class TestMetroTransitServiceImpl extends BaseJsonTestSuite {
     }
 
     @Test
-    public void testGetStops() {
+    public void testGetStops() throws IOException {
 
         val wantedStops = Arrays.asList(
                 "TGBF",

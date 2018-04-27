@@ -31,50 +31,31 @@ public class MetroTransitServiceImpl implements MetroTransitService {
     }
 
     @Override
-    public Optional<ImmutableList<Route>> getRoutes() {
-
-        try {
-            return get(Urls.getRoutes(), new TypeReference<ImmutableList<Route>>() {});
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return Optional.empty();
+    public Optional<ImmutableList<Route>> getRoutes() throws IOException {
+        return get(Urls.getRoutes(), new TypeReference<ImmutableList<Route>>() {});
     }
 
     @Override
-    public Optional<ImmutableList<Direction>> getValidDirections(Route route) {
+    public Optional<ImmutableList<Direction>> getValidDirections(Route route) throws IOException {
 
         Preconditions.checkNotNull(route);
         Preconditions.checkNotNull(route.getRoute());
 
-        try {
-            return get(Urls.getDirections(route), new TypeReference<ImmutableList<Direction>>() {});
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return Optional.empty();
+        return get(Urls.getDirections(route), new TypeReference<ImmutableList<Direction>>() {});
     }
 
     @Override
-    public Optional<ImmutableList<Stop>> getStops(Route route, Direction direction) {
+    public Optional<ImmutableList<Stop>> getStops(Route route, Direction direction) throws IOException {
 
         Preconditions.checkNotNull(route);
         Preconditions.checkNotNull(route.getRoute());
         Preconditions.checkNotNull(direction);
 
-        try {
-            return get(Urls.getStops(route, direction), new TypeReference<ImmutableList<Stop>>() {});
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return Optional.empty();
+        return get(Urls.getStops(route, direction), new TypeReference<ImmutableList<Stop>>() {});
     }
 
     @Override
-    public Optional<ImmutableList<Departure>> getDepartures(Route route, Direction direction, Stop stop) {
+    public Optional<ImmutableList<Departure>> getDepartures(Route route, Direction direction, Stop stop) throws IOException {
 
         Preconditions.checkNotNull(route);
         Preconditions.checkNotNull(direction);
@@ -84,13 +65,7 @@ public class MetroTransitServiceImpl implements MetroTransitService {
         Preconditions.checkNotNull(stop.getValue());
         Preconditions.checkArgument(direction != Direction.unknown);
 
-        try {
-            return get(Urls.getDepartures(route, direction, stop), new TypeReference<ImmutableList<Departure>>() {});
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return Optional.empty();
+        return get(Urls.getDepartures(route, direction, stop), new TypeReference<ImmutableList<Departure>>() {});
     }
     private <T> Optional<T> get(String url, TypeReference<T> type) throws IOException {
         String body = client.get(url);

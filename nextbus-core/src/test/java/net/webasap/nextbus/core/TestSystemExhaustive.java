@@ -1,4 +1,4 @@
-package net.webasap.nextbus;
+package net.webasap.nextbus.core;
 
 import com.google.inject.Guice;
 import lombok.val;
@@ -13,6 +13,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.Duration;
 import java.time.ZonedDateTime;
@@ -22,7 +23,7 @@ public class TestSystemExhaustive {
 
     private static MetroTransitService metroTransitService;
 
-    private List<Route> getAllRoutes() {
+    private List<Route> getAllRoutes() throws IOException {
         val routesOpt = metroTransitService.getRoutes();
         if (routesOpt.isPresent()) {
             return routesOpt.get();
@@ -30,7 +31,7 @@ public class TestSystemExhaustive {
         throw new RuntimeException("Failed to get all routes.");
     }
 
-    private List<Direction> getDirectionsForRoute(Route route) {
+    private List<Direction> getDirectionsForRoute(Route route) throws IOException {
         val dirOpt = metroTransitService.getValidDirections(route);
         if (dirOpt.isPresent()) {
             return dirOpt.get();
@@ -38,7 +39,7 @@ public class TestSystemExhaustive {
         throw new RuntimeException("Failed to get Directions for route " + route.getDescription());
     }
 
-    private List<Stop> getStops(Route route, Direction direction) {
+    private List<Stop> getStops(Route route, Direction direction) throws IOException {
         val stopsOpt = metroTransitService.getStops(route, direction);
         if (stopsOpt.isPresent()) {
             return stopsOpt.get();
@@ -46,7 +47,7 @@ public class TestSystemExhaustive {
         throw new RuntimeException("Failed to get stops for route: " + route + ", and direction: " + direction);
     }
 
-    private List<Departure> getDepartures(Route route, Direction direction, Stop stop) {
+    private List<Departure> getDepartures(Route route, Direction direction, Stop stop) throws IOException {
         val departuresOpt = metroTransitService.getDepartures(route, direction, stop);
         if (departuresOpt.isPresent()) {
             return departuresOpt.get();
@@ -82,7 +83,7 @@ public class TestSystemExhaustive {
     }
 
 //    @Test
-    public void testSystemExhaustiveTest() {
+    public void testSystemExhaustiveTest() throws IOException {
 
         val now = ZonedDateTime.now();
 
@@ -90,20 +91,28 @@ public class TestSystemExhaustive {
             out.println(getCsvHeader());
             val routes = getAllRoutes();
             routes.stream().forEach(route -> {
-                val directions = getDirectionsForRoute(route);
-                directions.stream().forEach(direction -> {
-                    val stops = getStops(route, direction);
-                    stops.stream().forEach(stop -> {
+                try {
+                    val directions = getDirectionsForRoute(route);
+                    directions.stream().forEach(direction -> {
                         try {
-                            val departures = getDepartures(route, direction, stop);
-                            departures.stream().forEach(departure -> {
-                                out.println(getCsvRecord(route, direction, stop, departure, now));
+                            val stops = getStops(route, direction);
+                            stops.stream().forEach(stop -> {
+                                try {
+                                    val departures = getDepartures(route, direction, stop);
+                                    departures.stream().forEach(departure -> {
+                                        out.println(getCsvRecord(route, direction, stop, departure, now));
+                                    });
+                                } catch (Exception e) {
+                                    System.out.println("Failed for route: " + route + ", direction: " + direction + ", stop: " + stop);
+                                }
                             });
-                        } catch (Exception e) {
-                            System.out.println("Failed for route: " + route + ", direction: " + direction + ", stop: " + stop);
+                        } catch (IOException e) {
+                            System.out.println("IOException: " + e.getMessage());
                         }
                     });
-                });
+                } catch (IOException e) {
+                    System.out.println("IOException: " + e.getMessage());
+                }
             });
         } catch (FileNotFoundException e) {
             e.printStackTrace();

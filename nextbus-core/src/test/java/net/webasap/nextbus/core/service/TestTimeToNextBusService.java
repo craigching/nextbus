@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 public class TestTimeToNextBusService extends BaseJsonTestSuite {
 
     @Test
-    public void testHappyPath() {
+    public void testHappyPath() throws IOException {
 
         // The departure we are targeting is at 9:45 and we want the output to
         // be "5 minutes", so specify our ref time as 9:40.  See departures.json
@@ -57,7 +57,7 @@ public class TestTimeToNextBusService extends BaseJsonTestSuite {
     }
 
     @Test
-    public void testUnknownRoute() {
+    public void testUnknownRoute() throws IOException {
 
         val routesUrl = "http://svc.metrotransit.org/NexTrip/Routes";
 
@@ -74,7 +74,7 @@ public class TestTimeToNextBusService extends BaseJsonTestSuite {
     }
 
     @Test
-    public void testMulitpleMatchingRoutes() {
+    public void testMulitpleMatchingRoutes() throws IOException {
 
 
         val routesUrl = "http://svc.metrotransit.org/NexTrip/Routes";
@@ -92,7 +92,7 @@ public class TestTimeToNextBusService extends BaseJsonTestSuite {
     }
 
     @Test
-    public void testBadDirection() {
+    public void testBadDirection() throws IOException {
         val routeIdText = "901"; // METRO Blue Line
 
         val routesUrl = "http://svc.metrotransit.org/NexTrip/Routes";
@@ -112,7 +112,7 @@ public class TestTimeToNextBusService extends BaseJsonTestSuite {
     }
 
     @Test
-    public void testUnknownStop() {
+    public void testUnknownStop() throws IOException {
         val routeIdText = "901"; // METRO Blue Line
         val directionIdText = "1"; // SOUTHBOUND
 
@@ -135,7 +135,7 @@ public class TestTimeToNextBusService extends BaseJsonTestSuite {
     }
 
     @Test
-    public void testMultipleStops() {
+    public void testMultipleStops() throws IOException {
         val routeIdText = "901"; // METRO Blue Line
         val directionIdText = "1"; // SOUTHBOUND
 

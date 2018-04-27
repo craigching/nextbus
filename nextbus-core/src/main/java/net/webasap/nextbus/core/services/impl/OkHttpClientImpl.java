@@ -17,18 +17,13 @@ public class OkHttpClientImpl implements HttpClient {
     final private OkHttpClient client = new OkHttpClient();
 
     @Override
-    public String get(String url) {
+    public String get(String url) throws  IOException {
         val request = new Request.Builder()
                 .url(url)
                 .addHeader("Accept", "application/json")
                 .build();
         try (Response response = client.newCall(request).execute()) {
             return response.body().string();
-        } catch (IOException e) {
-            // TODO Handle exception
-            e.printStackTrace();
         }
-        // TODO Either optional or throw
-        return null;
     }
 }

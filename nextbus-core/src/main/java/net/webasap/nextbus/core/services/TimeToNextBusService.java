@@ -10,6 +10,7 @@ import net.webasap.nextbus.core.utilities.RefTime;
 import net.webasap.nextbus.core.utilities.TimeUtility;
 
 import javax.inject.Inject;
+import java.io.IOException;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.Comparator;
@@ -29,6 +30,8 @@ import java.util.stream.Collectors;
  */
 public class TimeToNextBusService {
 
+    final static private String COMMS_ERROR = "There was a communications error communicating with the Metro Transit NexTrip service.  Please try again later.";
+
     final private MetroTransitService metroTransitService;
     final private RefTime refTime;
 
@@ -47,19 +50,23 @@ public class TimeToNextBusService {
      */
     public Route findRouteFromText(String text) throws BusServiceException {
 
-        val routes = this.metroTransitService.getRoutes().get();
+        try {
+            val routes = this.metroTransitService.getRoutes().get();
 
-        val matches = routes.stream()
-                .filter(route -> route.getDescription().contains(text))
-                .collect(ImmutableList.toImmutableList());
+            val matches = routes.stream()
+                    .filter(route -> route.getDescription().contains(text))
+                    .collect(ImmutableList.toImmutableList());
 
-        if (matches.size() == 0) {
-            throw new BusServiceException("No matches were found for the given route.");
-        } else if (matches.size() > 1) {
-            throw new BusServiceException("More than one match was found for the given route.");
+            if (matches.size() == 0) {
+                throw new BusServiceException("No matches were found for the given route.");
+            } else if (matches.size() > 1) {
+                throw new BusServiceException("More than one match was found for the given route.");
+            }
+
+            return matches.get(0);
+        } catch (IOException e) {
+            throw new BusServiceCommunicationsException();
         }
-
-        return matches.get(0);
     }
 
     /**
@@ -73,13 +80,17 @@ public class TimeToNextBusService {
      */
     public Direction validateDirection(Route route, String direction) throws BusServiceException {
 
-        val validDirections = this.metroTransitService.getValidDirections(route).get();
+        try {
+            val validDirections = this.metroTransitService.getValidDirections(route).get();
 
-        if (!validDirections.contains(Direction.of(direction))) {
-            throw new BusServiceException("The provided direction is not valid for the given route.");
+            if (!validDirections.contains(Direction.of(direction))) {
+                throw new BusServiceException("The provided direction is not valid for the given route.");
+            }
+
+            return Direction.of(direction);
+        } catch (IOException e) {
+            throw new BusServiceCommunicationsException();
         }
-
-        return Direction.of(direction);
     }
 
     /**
@@ -93,19 +104,23 @@ public class TimeToNextBusService {
      */
     public Stop findStop(Route route, Direction direction, String stopText) throws BusServiceException {
 
-        val stops = this.metroTransitService.getStops(route, direction).get();
+        try {
+            val stops = this.metroTransitService.getStops(route, direction).get();
 
-        val foundStops = stops.stream()
-                .filter(stop -> stop.getText().contains(stopText))
-                .collect(ImmutableList.toImmutableList());
+            val foundStops = stops.stream()
+                    .filter(stop -> stop.getText().contains(stopText))
+                    .collect(ImmutableList.toImmutableList());
 
-        if (foundStops.size() == 0) {
-            throw new BusServiceException("No stop was found for the given stop, route, and direction.");
-        } else if (foundStops.size() > 1) {
-            throw new BusServiceException("More than one stop was found for the given stop, route, and direction.");
+            if (foundStops.size() == 0) {
+                throw new BusServiceException("No stop was found for the given stop, route, and direction.");
+            } else if (foundStops.size() > 1) {
+                throw new BusServiceException("More than one stop was found for the given stop, route, and direction.");
+            }
+
+            return foundStops.get(0);
+        } catch (IOException e) {
+            throw new BusServiceCommunicationsException();
         }
-
-        return foundStops.get(0);
     }
 
     /**
@@ -116,26 +131,31 @@ public class TimeToNextBusService {
      * @param stop Stop that represents the desired stop
      * @return The next Departure if one exists, none otherwise
      */
-    public Optional<Departure> findNextDeparture(Route route, Direction direction, Stop stop) {
-        val departures = this.metroTransitService.getDepartures(route, direction, stop).get();
+    public Optional<Departure> findNextDeparture(Route route, Direction direction, Stop stop) throws BusServiceException {
 
-        // Convert each departure time using TimeUtility to a ZonedDateTime,
-        // collect those in a map, find the minimum key and return that
-        // departure
-        Map<ZonedDateTime, Departure> m = departures.stream()
-                .collect(Collectors
-                        .toMap( // key == ZonedDateTime
-                                d -> TimeUtility.convertDepartureTime(d.getDepartureTime()),
-                                // value == Optional<Departure>
-                                d -> d));
-        val minDate = m.keySet().stream()
-                .min(Comparator.comparing(zdt -> zdt));
+        try {
+            val departures = this.metroTransitService.getDepartures(route, direction, stop).get();
 
-        if (minDate.isPresent()) {
-            return Optional.of(m.get(minDate.get()));
+            // Convert each departure time using TimeUtility to a ZonedDateTime,
+            // collect those in a map, find the minimum key and return that
+            // departure
+            Map<ZonedDateTime, Departure> m = departures.stream()
+                    .collect(Collectors
+                            .toMap( // key == ZonedDateTime
+                                    d -> TimeUtility.convertDepartureTime(d.getDepartureTime()),
+                                    // value == Optional<Departure>
+                                    d -> d));
+            val minDate = m.keySet().stream()
+                    .min(Comparator.comparing(zdt -> zdt));
+
+            if (minDate.isPresent()) {
+                return Optional.of(m.get(minDate.get()));
+            }
+
+            return Optional.empty();
+        } catch (IOException e) {
+            throw new BusServiceCommunicationsException();
         }
-
-        return Optional.empty();
     }
 
     /**
@@ -177,12 +197,19 @@ public class TimeToNextBusService {
      * @return A newline delimited String of all route's by their description
      */
     public String listRoutes() {
-        val routes = this.metroTransitService.getRoutes().get();
-        val bldr = new StringBuilder();
-        for (val route : routes) {
-            bldr.append(route.getDescription()).append(System.getProperty("line.separator"));
+        String message = "";
+        try {
+            val routes = this.metroTransitService.getRoutes().get();
+            val bldr = new StringBuilder();
+            for (val route : routes) {
+                bldr.append(route.getDescription()).append(System.getProperty("line.separator"));
+            }
+            message = bldr.toString();
+        } catch (IOException e) {
+            message = COMMS_ERROR;
         }
-        return bldr.toString();
+
+        return message;
     }
 
     /**
@@ -202,6 +229,8 @@ public class TimeToNextBusService {
             message = bldr.toString();
         } catch (BusServiceException e) {
             message = e.getMessage();
+        } catch (IOException e) {
+            message = COMMS_ERROR;
         }
 
         return message;
@@ -228,6 +257,8 @@ public class TimeToNextBusService {
             message = bldr.toString();
         } catch (BusServiceException e) {
             message = e.getMessage();
+        } catch (IOException e) {
+            message = COMMS_ERROR;
         }
 
         return message;
@@ -261,6 +292,8 @@ public class TimeToNextBusService {
             message = bldr.toString();
         } catch (BusServiceException e) {
             message = e.getMessage();
+        } catch (IOException e) {
+            message = COMMS_ERROR;
         }
 
         return message;
@@ -269,6 +302,12 @@ public class TimeToNextBusService {
     private static class BusServiceException extends Exception {
         public BusServiceException(String message) {
             super(message);
+        }
+    }
+
+    private static class BusServiceCommunicationsException extends BusServiceException {
+        public BusServiceCommunicationsException() {
+            super(COMMS_ERROR);
         }
     }
 }
