@@ -7,6 +7,7 @@ import net.webasap.nextbus.core.services.HttpClient;
 import net.webasap.nextbus.core.services.MetroTransitService;
 import net.webasap.nextbus.core.services.impl.MetroTransitServiceImpl;
 import net.webasap.nextbus.core.services.impl.OkHttpClientImpl;
+import net.webasap.nextbus.core.utilities.RefTime;
 
 /**
  * Guice module for the nextbus project
@@ -14,6 +15,7 @@ import net.webasap.nextbus.core.services.impl.OkHttpClientImpl;
 public class BusServiceModule extends AbstractModule {
     @Override
     protected void configure() {
+        bind(RefTime.class);
         bind(TimeToNextBusService.class)
                 .in(Singleton.class);
         bind(HttpClient.class)

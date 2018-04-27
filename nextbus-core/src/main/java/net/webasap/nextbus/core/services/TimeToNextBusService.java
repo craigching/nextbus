@@ -6,6 +6,7 @@ import net.webasap.nextbus.core.domain.Departure;
 import net.webasap.nextbus.core.domain.Direction;
 import net.webasap.nextbus.core.domain.Route;
 import net.webasap.nextbus.core.domain.Stop;
+import net.webasap.nextbus.core.utilities.RefTime;
 import net.webasap.nextbus.core.utilities.TimeUtility;
 
 import javax.inject.Inject;
@@ -29,10 +30,12 @@ import java.util.stream.Collectors;
 public class TimeToNextBusService {
 
     final private MetroTransitService metroTransitService;
+    final private RefTime refTime;
 
     @Inject
-    public TimeToNextBusService(MetroTransitService metroTransitService) {
+    public TimeToNextBusService(MetroTransitService metroTransitService, RefTime refTime) {
         this.metroTransitService = metroTransitService;
+        this.refTime = refTime;
     }
 
     /**
@@ -156,7 +159,8 @@ public class TimeToNextBusService {
             if (opt.isPresent()) {
                 val departure = opt.get();
                 val departTime = TimeUtility.convertDepartureTime(departure.getDepartureTime());
-                val diff = Duration.between(ZonedDateTime.now(), departTime);
+                val now = this.refTime.getRefTime();
+                val diff = Duration.between(now, departTime);
 
                 message = TimeUtility.convertDuration(diff);
             }
