@@ -1,0 +1,26 @@
+[
+    {
+        "Text": "Target North Campus Building F",
+        "Value": "TGBF"
+    },
+    {
+        "Text": "Target North Campus Building D",
+        "Value": "TGBD"
+    },
+    {
+        "Text": "Hwy 252 and 66th Ave ",
+        "Value": "6625"
+    },
+    {
+        "Text": "4th St  and Hennepin Ave",
+        "Value": "4SHE"
+    },
+    {
+        "Text": "Marquette Ave and 7th St ",
+        "Value": "7SMA"
+    },
+    {
+        "Text": "11th St  and Marquette Ave ",
+        "Value": "11MA"
+    }
+]

@@ -1,9 +1,9 @@
 
 1. [X] Design main -> MetroTransitService
 2. [ ] Decouple MetroTransitService from Jackson
-3. [ ] Javadoc
-4. [ ] Testing with mocks
-5. [ ] README.md
+3. [X] Javadoc
+4. [X] Testing with mocks
+5. [X] README.md
 6. [ ] Web interface?
 7. [ ] Hosted on AWS?
 8. [X] Need to implement GetTimepointDepartures

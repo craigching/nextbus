@@ -1,0 +1,17 @@
+[
+    {
+        "Description": "METRO Blue Line",
+        "ProviderID": "8",
+        "Route": "901"
+    },
+    {
+        "Description": "METRO Green Line",
+        "ProviderID": "8",
+        "Route": "902"
+    },
+    {
+        "Description": "METRO Red Line",
+        "ProviderID": "9",
+        "Route": "903"
+    }
+]
