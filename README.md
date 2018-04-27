@@ -4,17 +4,19 @@
 - [Overview](#overview)
 - [Building](#building)
 - [Running](#running)
-- [Integration Tests](#tests)
+- [System Test](#system_test)
 - [TODO](#todo)
 
 ***
 <div id="overview"/>
+
 ### Overview
 
 In this programming assignment, I implement a client that consumes the REST-based API at http://svc.metrotransit.org to provide the arrival of the next bus given a route, direction, and stop.
 
 ***
 <div id="building"/>
+
 ### Building
 
 In order to build, you need the following:
@@ -53,6 +55,7 @@ This will build the project and run unit tests.
 
 ***
 <div id="running"/>
+
 ### Running
 
 To run the command line program, make sure the project has built successfully.  Then, you can run the `runCommandline.sh` shell script from the root directory.  The command-line utility supports two modes of operation.  The first is as specified in the assignment:
@@ -74,7 +77,8 @@ The other way to run it is with robust command-line options.  This allows the us
     --stop <String>       A valid stop on the given route
 
 ***
-<div id="System Test"
+<div id="system_test"/>
+
 ### System Test
 
 There is an exhaustive system test that is disabled in the project.  To run it ...
