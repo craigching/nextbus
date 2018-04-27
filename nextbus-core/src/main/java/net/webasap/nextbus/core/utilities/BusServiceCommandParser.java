@@ -7,6 +7,9 @@ import lombok.val;
 import java.io.IOException;
 import java.util.Arrays;
 
+/**
+ * Robust command-line parser for nextbus
+ */
 @Getter
 public class BusServiceCommandParser {
 

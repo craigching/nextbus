@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
 import lombok.val;
 
+/**
+ * A data class representing a direction for the Metro Transit API
+ */
 public enum Direction {
 
     unknown, south, east, west, north;

@@ -8,6 +8,9 @@ import net.webasap.nextbus.core.services.MetroTransitService;
 import net.webasap.nextbus.core.services.impl.MetroTransitServiceImpl;
 import net.webasap.nextbus.core.services.impl.OkHttpClientImpl;
 
+/**
+ * Guice module for the nextbus project
+ */
 public class BusServiceModule extends AbstractModule {
     @Override
     protected void configure() {

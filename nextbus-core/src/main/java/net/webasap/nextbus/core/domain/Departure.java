@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Value;
 
+/**
+ * A data class representing a departure for the Metro Transit API
+ */
 @Value
 public class Departure {
 

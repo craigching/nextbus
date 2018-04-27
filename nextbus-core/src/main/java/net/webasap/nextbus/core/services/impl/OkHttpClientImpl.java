@@ -8,6 +8,10 @@ import okhttp3.Response;
 
 import java.io.IOException;
 
+/**
+ * An implemenation of the simple HttpClient interface based on Square's OkHttp
+ * project
+ */
 public class OkHttpClientImpl implements HttpClient {
 
     final private OkHttpClient client = new OkHttpClient();

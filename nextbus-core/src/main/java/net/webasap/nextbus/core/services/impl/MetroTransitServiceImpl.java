@@ -10,12 +10,16 @@ import net.webasap.nextbus.core.domain.Direction;
 import net.webasap.nextbus.core.domain.Route;
 import net.webasap.nextbus.core.domain.Stop;
 import net.webasap.nextbus.core.services.HttpClient;
+import net.webasap.nextbus.core.services.MetroTransitService;
 
 import javax.inject.Inject;
 import java.io.IOException;
 import java.util.Optional;
 
-public class MetroTransitServiceImpl implements net.webasap.nextbus.core.services.MetroTransitService {
+/**
+ * An implementation of the MetroTransitService API.
+ */
+public class MetroTransitServiceImpl implements MetroTransitService {
 
     final private HttpClient client;
     final private ObjectMapper mapper = new ObjectMapper()

@@ -8,6 +8,9 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.regex.Pattern;
 
+/**
+ * Time-based utility class for time conversions used by nextbus
+ */
 public class TimeUtility {
 
     private static final String DEPARTURE_TIME_REGEX = "\\/Date\\((.*)(-.*)\\)\\/";
