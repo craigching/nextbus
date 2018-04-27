@@ -102,7 +102,9 @@
             </plugins>
         </pluginManagement>
     </build>
-  <modules>
-    <module>nextbus-core</module>
-  </modules>
+
+    <modules>
+        <module>nextbus-core</module>
+    </modules>
+
 </project>
