@@ -6,6 +6,8 @@ import net.webasap.nextbus.core.services.HttpException;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
@@ -14,6 +16,8 @@ import java.io.IOException;
  * project
  */
 public class OkHttpClientImpl implements HttpClient {
+
+    final static private Logger LOG = LoggerFactory.getLogger(OkHttpClientImpl.class);
 
     final private OkHttpClient client = new OkHttpClient();
 
@@ -25,6 +29,7 @@ public class OkHttpClientImpl implements HttpClient {
                 .build();
         try (Response response = client.newCall(request).execute()) {
             int statusCode = response.code();
+            LOG.debug("URL: {}, status: {}", url, statusCode);
             if (statusCode != 200) {
                 throw new HttpException(statusCode);
             }
