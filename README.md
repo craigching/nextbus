@@ -98,4 +98,4 @@ There is an exhaustive system test that is disabled in the project.  To run it, 
 
 ### TODO
 
-There is a simple emacs ord mode file called TODO.org.  I keep track of things that need doing there and check them off as I finish them.
+There is a simple emacs org mode file called TODO.org.  I keep track of things that need doing there and check them off as I finish them.
