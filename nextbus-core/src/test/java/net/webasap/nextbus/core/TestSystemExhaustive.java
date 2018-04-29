@@ -88,7 +88,7 @@ public class TestSystemExhaustive {
         metroTransitService = injector.getInstance(MetroTransitService.class);
     }
 
-    @Test
+//    @Test
     public void testSystemExhaustiveTest() throws HttpException {
 
         val now = ZonedDateTime.now();
