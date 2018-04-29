@@ -64,8 +64,8 @@ public class TimeToNextBusService {
             }
 
             return matches.get(0);
-        } catch (IOException e) {
-            throw new BusServiceCommunicationsException();
+        } catch (HttpException e) {
+            throw new BusServiceException(handleHttpException(e));
         }
     }
 
@@ -88,8 +88,8 @@ public class TimeToNextBusService {
             }
 
             return Direction.of(direction);
-        } catch (IOException e) {
-            throw new BusServiceCommunicationsException();
+        } catch (HttpException e) {
+            throw new BusServiceException(handleHttpException(e));
         }
     }
 
@@ -118,8 +118,8 @@ public class TimeToNextBusService {
             }
 
             return foundStops.get(0);
-        } catch (IOException e) {
-            throw new BusServiceCommunicationsException();
+        } catch (HttpException e) {
+            throw new BusServiceException(handleHttpException(e));
         }
     }
 
@@ -153,8 +153,8 @@ public class TimeToNextBusService {
             }
 
             return Optional.empty();
-        } catch (IOException e) {
-            throw new BusServiceCommunicationsException();
+        } catch (HttpException e) {
+            throw new BusServiceException(handleHttpException(e));
         }
     }
 
@@ -205,8 +205,8 @@ public class TimeToNextBusService {
                 bldr.append(route.getDescription()).append(System.getProperty("line.separator"));
             }
             message = bldr.toString();
-        } catch (IOException e) {
-            message = COMMS_ERROR;
+        } catch (HttpException e) {
+            message = handleHttpException(e);
         }
 
         return message;
@@ -229,8 +229,8 @@ public class TimeToNextBusService {
             message = bldr.toString();
         } catch (BusServiceException e) {
             message = e.getMessage();
-        } catch (IOException e) {
-            message = COMMS_ERROR;
+        } catch (HttpException e) {
+            message = handleHttpException(e);
         }
 
         return message;
@@ -257,8 +257,8 @@ public class TimeToNextBusService {
             message = bldr.toString();
         } catch (BusServiceException e) {
             message = e.getMessage();
-        } catch (IOException e) {
-            message = COMMS_ERROR;
+        } catch (HttpException e) {
+            message = handleHttpException(e);
         }
 
         return message;
@@ -292,11 +292,22 @@ public class TimeToNextBusService {
             message = bldr.toString();
         } catch (BusServiceException e) {
             message = e.getMessage();
-        } catch (IOException e) {
-            message = COMMS_ERROR;
+        } catch (HttpException e) {
+            message = handleHttpException(e);
         }
 
         return message;
+    }
+
+    private String handleHttpException(HttpException e) {
+        val cause = e.getCause();
+        if (cause != null && cause instanceof  IOException) {
+            return COMMS_ERROR;
+        }
+
+        return String.format(
+                "There was an unexpected error returned from the service, status code: %d",
+                e.getStatusCode());
     }
 
     private static class BusServiceException extends Exception {

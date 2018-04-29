@@ -5,21 +5,15 @@ import net.webasap.nextbus.core.BaseJsonTestSuite;
 import net.webasap.nextbus.core.domain.Direction;
 import net.webasap.nextbus.core.domain.Route;
 import net.webasap.nextbus.core.services.HttpClient;
+import net.webasap.nextbus.core.services.HttpException;
 import net.webasap.nextbus.core.services.impl.MetroTransitServiceImpl;
-import org.apache.commons.io.FileUtils;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.Arrays;
 
-import static net.webasap.nextbus.core.JsonLoader.loadJsonFile;
-import static net.webasap.nextbus.core.domain.Direction.*;
+import static net.webasap.nextbus.core.domain.Direction.north;
+import static net.webasap.nextbus.core.domain.Direction.south;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -27,7 +21,7 @@ import static org.mockito.Mockito.when;
 public class TestMetroTransitServiceImpl extends BaseJsonTestSuite {
 
     @Test
-    public void testGetRoutes() throws IOException {
+    public void testGetRoutes() throws HttpException {
 
         val colors = Arrays.asList("Blue", "Green", "Red");
 
@@ -45,7 +39,7 @@ public class TestMetroTransitServiceImpl extends BaseJsonTestSuite {
     }
 
     @Test
-    public void testGetDirections() throws IOException {
+    public void testGetDirections() throws HttpException {
 
         val routeName = "MyTestRoute";
         val url = String.format("http://svc.metrotransit.org/NexTrip/Directions/%s", routeName);
@@ -65,7 +59,7 @@ public class TestMetroTransitServiceImpl extends BaseJsonTestSuite {
     }
 
     @Test
-    public void testGetStops() throws IOException {
+    public void testGetStops() throws HttpException {
 
         val wantedStops = Arrays.asList(
                 "TGBF",

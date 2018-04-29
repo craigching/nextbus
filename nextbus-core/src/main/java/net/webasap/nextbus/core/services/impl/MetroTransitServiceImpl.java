@@ -10,6 +10,7 @@ import net.webasap.nextbus.core.domain.Direction;
 import net.webasap.nextbus.core.domain.Route;
 import net.webasap.nextbus.core.domain.Stop;
 import net.webasap.nextbus.core.services.HttpClient;
+import net.webasap.nextbus.core.services.HttpException;
 import net.webasap.nextbus.core.services.MetroTransitService;
 
 import javax.inject.Inject;
@@ -31,12 +32,12 @@ public class MetroTransitServiceImpl implements MetroTransitService {
     }
 
     @Override
-    public Optional<ImmutableList<Route>> getRoutes() throws IOException {
+    public Optional<ImmutableList<Route>> getRoutes() throws HttpException {
         return get(Urls.getRoutes(), new TypeReference<ImmutableList<Route>>() {});
     }
 
     @Override
-    public Optional<ImmutableList<Direction>> getValidDirections(Route route) throws IOException {
+    public Optional<ImmutableList<Direction>> getValidDirections(Route route) throws HttpException {
 
         Preconditions.checkNotNull(route);
         Preconditions.checkNotNull(route.getRoute());
@@ -45,7 +46,7 @@ public class MetroTransitServiceImpl implements MetroTransitService {
     }
 
     @Override
-    public Optional<ImmutableList<Stop>> getStops(Route route, Direction direction) throws IOException {
+    public Optional<ImmutableList<Stop>> getStops(Route route, Direction direction) throws HttpException {
 
         Preconditions.checkNotNull(route);
         Preconditions.checkNotNull(route.getRoute());
@@ -55,7 +56,7 @@ public class MetroTransitServiceImpl implements MetroTransitService {
     }
 
     @Override
-    public Optional<ImmutableList<Departure>> getDepartures(Route route, Direction direction, Stop stop) throws IOException {
+    public Optional<ImmutableList<Departure>> getDepartures(Route route, Direction direction, Stop stop) throws HttpException {
 
         Preconditions.checkNotNull(route);
         Preconditions.checkNotNull(direction);
@@ -67,9 +68,13 @@ public class MetroTransitServiceImpl implements MetroTransitService {
 
         return get(Urls.getDepartures(route, direction, stop), new TypeReference<ImmutableList<Departure>>() {});
     }
-    private <T> Optional<T> get(String url, TypeReference<T> type) throws IOException {
-        String body = client.get(url);
-        return Optional.of(mapper.readValue(body, type));
+    private <T> Optional<T> get(String url, TypeReference<T> type) throws HttpException {
+        try {
+            String body = client.get(url);
+            return Optional.of(mapper.readValue(body, type));
+        } catch (IOException e) {
+            throw new HttpException("There was a problem decoding the response from the service", e);
+        }
     }
 
     private static class Urls {

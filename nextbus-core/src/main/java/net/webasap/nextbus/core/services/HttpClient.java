@@ -9,6 +9,6 @@ import java.io.IOException;
 public interface HttpClient {
 
     /** Returns the body of the response as a string for a given String url */
-    public String get(String url) throws IOException;
+    public String get(String url) throws HttpException;
 
 }
