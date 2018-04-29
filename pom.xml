@@ -75,6 +75,23 @@
                 <version>1.2.3</version>
             </dependency>
             <dependency>
+                <groupId>ru.vyarus</groupId>
+                <artifactId>dropwizard-guicey</artifactId>
+                <version>4.1.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>net.webasap.nextbus</groupId>
+                <artifactId>nextbus-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.webasap.nextbus</groupId>
+                <artifactId>nextbus-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>4.12</version>
@@ -135,6 +152,7 @@
 
     <modules>
         <module>nextbus-core</module>
+        <module>nextbus-service</module>
     </modules>
 
 </project>
