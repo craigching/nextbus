@@ -58,9 +58,14 @@ This will build the project and run unit tests.
 
 ### Running
 
-To run the command line program, make sure the project has built successfully.  Then, you can run the `runCommandline.sh` shell script from the root directory.  The command-line utility supports two modes of operation.  The first is as specified in the assignment:
+To run the command line program, make sure the project has built successfully.  Then, you can run the `nextbus.sh` shell script from the root directory.  The command-line utility supports two modes of operation.  The first is as specified in the assignment:
 
-    % nextbus <route> <stop> <direction>
+    % ./nextbus.sh <route> <stop> <direction>
+
+For example:
+
+    % ./nextbus.sh "METRO Blue Line" "Target Field Station Platform 1" south
+    5 minutes
 
 The other way to run it is with robust command-line options.  This allows the user to get a list of routes, directions, and stops making it easier to debug and track down problems:
 
@@ -76,9 +81,21 @@ The other way to run it is with robust command-line options.  This allows the us
     --route <String>      A valid route
     --stop <String>       A valid stop on the given route
 
+For example:
+
+    % ./nextbus.sh --route "METRO Blue Line" --stop "Target Field Station Platform 1" --direction south
+    5 minutes
+
 ***
 <div id="system_test"/>
 
 ### System Test
 
-There is an exhaustive system test that is disabled in the project.  To run it ...
+There is an exhaustive system test that is disabled in the project.  To run it, uncomment the two lines [here](https://github.com/craigching/nextbus/blob/master/nextbus-core/src/test/java/net/webasap/nextbus/core/TestSystemExhaustive.java#L91) and [here](https://github.com/craigching/nextbus/blob/master/nextbus-core/src/test/java/net/webasap/nextbus/core/TestSystemExhaustive.java#L129) then run `mvn test` or you can run it from within your IDE if desired.
+
+***
+<div id="todo"/>
+
+### TODO
+
+There is a simple emacs ord mode file called TODO.org.  I keep track of things that need doing there and check them off as I finish them.

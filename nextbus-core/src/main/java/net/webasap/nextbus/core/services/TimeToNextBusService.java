@@ -8,6 +8,8 @@ import net.webasap.nextbus.core.domain.Route;
 import net.webasap.nextbus.core.domain.Stop;
 import net.webasap.nextbus.core.utilities.RefTime;
 import net.webasap.nextbus.core.utilities.TimeUtility;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -30,6 +32,7 @@ import java.util.stream.Collectors;
  */
 public class TimeToNextBusService {
 
+    final static private Logger LOG = LoggerFactory.getLogger(TimeToNextBusService.class);
     final static private String COMMS_ERROR = "There was a communications error communicating with the Metro Transit NexTrip service.  Please try again later.";
 
     final private MetroTransitService metroTransitService;
@@ -60,6 +63,10 @@ public class TimeToNextBusService {
             if (matches.size() == 0) {
                 throw new BusServiceException("No matches were found for the given route.");
             } else if (matches.size() > 1) {
+                if (LOG.isErrorEnabled()) {
+                    LOG.error("More than one match found for the given route: {}", text);
+                    matches.forEach(route -> LOG.error(route.getDescription()));
+                }
                 throw new BusServiceException("More than one match was found for the given route.");
             }
 
