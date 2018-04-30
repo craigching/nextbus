@@ -3,7 +3,7 @@
 target
 *~
 *.log
-nextbus-core/dependency-reduced-pom.xml
+dependency-reduced-pom.xml
 nextbus-core/badTest.sh
 nextbus-core/bustimes.csv
 .DS_Store
