@@ -322,10 +322,4 @@ public class TimeToNextBusService {
             super(message);
         }
     }
-
-    private static class BusServiceCommunicationsException extends BusServiceException {
-        public BusServiceCommunicationsException() {
-            super(COMMS_ERROR);
-        }
-    }
 }
