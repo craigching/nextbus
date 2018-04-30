@@ -126,11 +126,11 @@ If you want to run the java dropwizard service, you can run it using the `servic
 
     % ./service.sh
 
-Assuming you don't have port conflicts with 8080 and 8081, you should then be able to access the UI from [localhost:8080](localhost:8080).  If you built the docker service, you can start it with:
+Assuming you don't have port conflicts with 8080 and 8081, you should then be able to access the UI from [localhost:8080](http://localhost:8080).  If you built the docker service, you can start it with:
 
     % ./docker-run.sh
 
-This will start a docker container and the UI should be accessible from [localhost:8080](localhost:8080).
+This will start a docker container and the UI should be accessible from [localhost:8080](http://localhost:8080).
 
 ***
 <div id="system_test"/>
