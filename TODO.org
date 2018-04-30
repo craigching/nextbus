@@ -4,8 +4,8 @@
 3. [X] Javadoc
 4. [X] Testing with mocks
 5. [X] README.md
-6. [ ] Web interface?
-7. [ ] Hosted on AWS?
+6. [X] Web interface?
+7. [X] Hosted on AWS?
 8. [X] Need to implement GetTimepointDepartures
 9. [X] Need to implement "how long before next bus?"
 10. [X] Need to pretty print the duration
