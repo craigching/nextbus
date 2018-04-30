@@ -12,4 +12,9 @@
 11. [ ] Capture text messages (error or otherwise) in a Messages class
 12. [ ] Print warning or error for route/departures that have known
     problems
-13. [ ] Logging?
+13. [X] Logging?
+14. [ ] Test null body().string()
+15. [ ] Fix using Optional.get() without .orElse() or .isPresent()
+16. [ ] Proper Response with status and entity in NextbusResource
+17. [ ] nextbus-core is still using logging config from its classpath
+    instead of the service config
