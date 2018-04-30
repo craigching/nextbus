@@ -1,6 +1,7 @@
 package net.webasap.nextbus.service;
 
 import io.dropwizard.Application;
+import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import net.webasap.nextbus.core.modules.BusServiceModule;
@@ -23,12 +24,13 @@ public class NextbusApplication extends Application<NextbusConfiguration> {
                 .enableAutoConfig(getClass().getPackage().getName())
                 .modules(new BusServiceModule())
                 .build());
+        bootstrap.addBundle(new AssetsBundle("/app", "/", "index.html"));
     }
 
     @Override
     public void run(final NextbusConfiguration configuration,
                     final Environment environment) {
-        // TODO: implement application
+        environment.jersey().setUrlPattern("/api/*");
     }
 
 }
