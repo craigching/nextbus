@@ -1,7 +1,5 @@
 package net.webasap.nextbus.core.services;
 
-import java.io.IOException;
-
 /**
  * A dead simple interface for an HTTP client.  For this project, only a GET
  * is needed.

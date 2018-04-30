@@ -179,9 +179,6 @@ public class TestTimeToNextBusService extends BaseJsonTestSuite {
                 new RefTime());
 
         val message = busService.getTimeToNextBus("METRO Blue Line", "Target Field Station Platform 1", "south");
-
-        System.out.println(message);
-
         assertEquals("There was an unexpected error returned from the service, status code: 404", message);
     }
 }

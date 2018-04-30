@@ -33,7 +33,8 @@ public class OkHttpClientImpl implements HttpClient {
             if (statusCode != 200) {
                 throw new HttpException(statusCode);
             }
-            return response.body().string();
+            val body = response.body();
+            return body != null ? body.string() : "";
         } catch (IOException e) {
             throw new HttpException("There was an error communicating with the service", e);
         }

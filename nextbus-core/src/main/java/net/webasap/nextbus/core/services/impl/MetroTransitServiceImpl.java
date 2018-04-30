@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
+import lombok.val;
 import net.webasap.nextbus.core.domain.Departure;
 import net.webasap.nextbus.core.domain.Direction;
 import net.webasap.nextbus.core.domain.Route;
@@ -70,7 +71,7 @@ public class MetroTransitServiceImpl implements MetroTransitService {
     }
     private <T> Optional<T> get(String url, TypeReference<T> type) throws HttpException {
         try {
-            String body = client.get(url);
+            val body = client.get(url);
             return Optional.of(mapper.readValue(body, type));
         } catch (IOException e) {
             throw new HttpException("There was a problem decoding the response from the service", e);
