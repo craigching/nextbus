@@ -54,7 +54,7 @@ public class TimeToNextBusService {
     public Route findRouteFromText(String text) throws BusServiceException {
 
         try {
-            val routes = this.metroTransitService.getRoutes().get();
+            val routes = this.metroTransitService.getRoutes().orElse(ImmutableList.of());
 
             val matches = routes.stream()
                     .filter(route -> route.getDescription().contains(text))
@@ -88,7 +88,7 @@ public class TimeToNextBusService {
     public Direction validateDirection(Route route, String direction) throws BusServiceException {
 
         try {
-            val validDirections = this.metroTransitService.getValidDirections(route).get();
+            val validDirections = this.metroTransitService.getValidDirections(route).orElse(ImmutableList.of());
 
             if (!validDirections.contains(Direction.of(direction))) {
                 throw new BusServiceException("The provided direction is not valid for the given route.");
@@ -112,7 +112,7 @@ public class TimeToNextBusService {
     public Stop findStop(Route route, Direction direction, String stopText) throws BusServiceException {
 
         try {
-            val stops = this.metroTransitService.getStops(route, direction).get();
+            val stops = this.metroTransitService.getStops(route, direction).orElse(ImmutableList.of());
 
             val foundStops = stops.stream()
                     .filter(stop -> stop.getText().contains(stopText))
@@ -141,7 +141,7 @@ public class TimeToNextBusService {
     public Optional<Departure> findNextDeparture(Route route, Direction direction, Stop stop) throws BusServiceException {
 
         try {
-            val departures = this.metroTransitService.getDepartures(route, direction, stop).get();
+            val departures = this.metroTransitService.getDepartures(route, direction, stop).orElse(ImmutableList.of());
 
             // Convert each departure time using TimeUtility to a ZonedDateTime,
             // collect those in a map, find the minimum key and return that
@@ -204,9 +204,9 @@ public class TimeToNextBusService {
      * @return A newline delimited String of all route's by their description
      */
     public String listRoutes() {
-        String message = "";
+        String message;
         try {
-            val routes = this.metroTransitService.getRoutes().get();
+            val routes = this.metroTransitService.getRoutes().orElse(ImmutableList.of());
             val bldr = new StringBuilder();
             for (val route : routes) {
                 bldr.append(route.getDescription()).append(System.getProperty("line.separator"));
@@ -225,10 +225,10 @@ public class TimeToNextBusService {
      * @return A newline delimited String of all directions for the route
      */
     public String listDirections(String routeText) {
-        String message = "";
+        String message;
         try {
             val route = findRouteFromText(routeText);
-            val directions = this.metroTransitService.getValidDirections(route).get();
+            val directions = this.metroTransitService.getValidDirections(route).orElse(ImmutableList.of());
             val bldr = new StringBuilder();
             for (val direction : directions) {
                 bldr.append(direction).append(System.getProperty("line.separator"));
@@ -252,11 +252,11 @@ public class TimeToNextBusService {
      * direction
      */
     public String listStops(String routeText, String directionText) {
-        String message = "";
+        String message;
         try {
             val route = findRouteFromText(routeText);
             val direction = validateDirection(route, directionText);
-            val stops = this.metroTransitService.getStops(route, direction).get();
+            val stops = this.metroTransitService.getStops(route, direction).orElse(ImmutableList.of());
             val bldr = new StringBuilder();
             for (val stop : stops) {
                 bldr.append(stop.getText()).append(System.getProperty("line.separator"));
@@ -283,12 +283,12 @@ public class TimeToNextBusService {
      * route, direction, and stop
      */
     public String listDepartures(String routeText, String directionText, String stopText) {
-        String message = "";
+        String message;
         try {
             val route = findRouteFromText(routeText);
             val direction = validateDirection(route, directionText);
             val stop = findStop(route, direction, stopText);
-            val departures = this.metroTransitService.getDepartures(route, direction, stop).get();
+            val departures = this.metroTransitService.getDepartures(route, direction, stop).orElse(ImmutableList.of());
             val bldr = new StringBuilder();
             for (val departure : departures) {
                 val departTime = TimeUtility.convertDepartureTime(departure.getDepartureTime());
@@ -308,7 +308,7 @@ public class TimeToNextBusService {
 
     private String handleHttpException(HttpException e) {
         val cause = e.getCause();
-        if (cause != null && cause instanceof  IOException) {
+        if (cause instanceof  IOException) {
             return COMMS_ERROR;
         }
 
@@ -318,7 +318,7 @@ public class TimeToNextBusService {
     }
 
     private static class BusServiceException extends Exception {
-        public BusServiceException(String message) {
+        BusServiceException(String message) {
             super(message);
         }
     }
